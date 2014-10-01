@@ -1,45 +1,54 @@
 import csv
 import os
-from xlrd import open_workbook
-
+import xlrd
 
 current_dir = os.path.dirname(os.path.realpath(__file__))
-
-print current_dir
 para_dir = os.path.abspath(os.path.join(current_dir, os.pardir))
-print para_dir
 
-simple_xlsx_path = os.path.join(para_dir, 'tests', 'resources','simple.xlsx')
+#
+# File Actions
+#
+def coerce_file_to_csv(filename, multiple_files=True):
+    pass
 
-book = open_workbook(simple_xlsx_path)
-print book.nsheets
-for sheet_index in range(book.nsheets):
-    print book.sheet_by_index(sheet_index)
-    print book.sheet_names()
+#
+# Workbook Actions
+#
+def open_workbook(path):
+    return xlrd.open_workbook(path)
 
-for sheet_name in book.sheet_names():
-    print book.sheet_by_name(sheet_name)
+def list_sheets_by_name(workbook):
+    return workbook.sheet_names()
 
-for sheet in book.sheets():
-    print sheet
+def load_sheet_by_name(workbook, sheet_name):
+    return workbook.sheet_by_name(sheet_name)
 
-import xlrd
-import csv
+def coerce_workbook_to_csv(workbook):
+    pass
 
-def csv_from_excel():
+#
+# Sheet Actions
+#
+def coerce_sheet_to_csv(sheet, filename=None):
+    
+    scroll_through_columns(sheet)
+    '''
+    if filename is None:
+        filename = sheet.name + ".csv"
+    with open(filename, 'wb') as csv_file:
+        writer = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
 
-    wb = xlrd.open_workbook(simple_xlsx_path)
-    sh = wb.sheet_by_name('Sheet1')
-    your_csv_file = open('your_csv_file.csv', 'wb')
-    wr = csv.writer(your_csv_file, quoting=csv.QUOTE_ALL)
+        for rownum in list(range(sheet.nrows)):
+            print sheet.row_values(rownum)
+            writer.writerow(sheet.row_values(rownum))
+    '''
+def scroll_through_columns(sheet):
+    for column_number in list(range(sheet.ncols)):
+        print is_column_empty(sheet.col_values(column_number))
 
-    # Below is equal to reading out row by row
-    for rownum in xrange(sh.nrows):
-        print sh.row_values(rownum)
-        wr.writerow(sh.row_values(rownum))
+def is_column_empty(column):
+    column_values = list(set(column))
+    return (('' in column_values) and (len(column_values) == 1))
 
-    your_csv_file.close()
-
-
-csv_from_excel()
-
+def clear_empty_rows():
+    print
